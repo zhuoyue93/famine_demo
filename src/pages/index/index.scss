@@ -1,0 +1,37 @@
+@import '../../styles/mixin';
+@import "~taro-ui/dist/style/components/flex.scss";
+@import "~taro-ui/dist/style/components/article.scss";
+
+.goods-ul {
+  background-color: #ff367f;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  .goods-li {
+    display: flex;
+    flex-direction: row;
+    .goods {
+      display: flex;
+      flex-direction: column;
+      image{
+        height: 250px;
+        width: 250px;
+        border-radius: 20px;
+      }
+    }
+  }
+
+  //.item-extra__image {
+  //  height: auto;
+  //  width: 250px;
+  //  border-radius: 20px;
+  //}
+  .at-article__p {
+    color: coral;
+  }
+}
+
+
+
+
+

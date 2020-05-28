@@ -1,36 +1,73 @@
-// eslint-disable-next-line no-unused-vars
-import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import Taro, {Component} from '@tarojs/taro'
+import {View, Swiper, Image, SwiperItem} from '@tarojs/components'
+import {connect} from '@tarojs/redux'
 import './index.scss'
 
-export default class Index extends Component {
 
-  componentWillMount () { }
+interface IndexProps {
+  dispatch?: any,
+  banner?: any
+}
 
-  componentDidMount () { }
+@connect(({index, user}) => ({
+  ...index, ...user
+}))
+class Index extends Component<IndexProps> {
+  config = {
+    navigationBarTitleText: '首页',
+  };
 
-  componentWillUnmount () { }
-
-  componentDidShow () { }
-
-  componentDidHide () { }
-
-  /**
-   * 指定config的类型声明为: Taro.Config
-   *
-   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-   */
-  config: Config = {
-    navigationBarTitleText: '首页'
+  constructor(props: IndexProps) {
+    super(props)
+    this.state = {}
   }
 
-  render () {
+
+  componentDidMount = () => {
+    this.props.dispatch({
+      type: 'index/swiper',
+    });
+    this.props.dispatch({
+      type: 'user/effectsDemo',
+    });
+
+  }
+  private gotoDetail = e => {
+    Taro.navigateTo({
+      url: `/pages/detail/index?id=${e.currentTarget.dataset.id}`,
+    });
+  };
+
+  render() {
     return (
       <View className='index'>
-        <Text>Hello world!</Text>
+        <Swiper indicatorDots circular autoplay>
+          {this.props.banner.map((item, index) => (<SwiperItem key={index}>
+            <Image mode='widthFix' src={`${item.primaryPicUrl}`} />
+          </SwiperItem>))
+          }
+        </Swiper>
+        <View className='recommend'>为你推荐</View>
+        <View className='goods-ul'>
+          {this.props.banner.map((item, index) => (<View key={index}
+            className='goods-li'
+            data-id={item.id}
+            onClick={this.gotoDetail}
+          >
+            <View className='goods'>
+              <Image src={`${item.primaryPicUrl}`} />
+            </View>
+            <View className='goods'>
+              <View className='at-article__h1'>{item.name}</View>
+              <View className='at-article__info'>{item.simpleDesc}</View>
+              <View className='at-article__p'>¥{item.price}</View>
+            </View>
+          </View>))
+          }
+        </View>
       </View>
     )
   }
 }
+
+export default Index;
